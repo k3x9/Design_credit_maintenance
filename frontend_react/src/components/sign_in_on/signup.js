@@ -12,7 +12,8 @@ function SignUpForm() {
     confirm_password: "",
     user_type: "",
     department: "",
-    roll_number: ""
+    roll_number: "",
+    year: "",
   });
   const [notify, setNotify] = React.useState({
     open: false,
@@ -33,8 +34,8 @@ function SignUpForm() {
   const handleOnSubmit = evt => {
     evt.preventDefault();
 
-    const { name, email, password,confirm_password, user_type, department, roll_number} = state;
-    axios.post("http://localhost:8000/signup/",
+    const { name, email, password,confirm_password, user_type, department, roll_number, year} = state;
+    axios.post("signup/",
         {
             name: name,
             email: email,
@@ -42,7 +43,8 @@ function SignUpForm() {
             confirm_password: confirm_password,
             user_type: user_type,
             department: department,
-            roll_number: roll_number
+            roll_number: roll_number,
+            year: year
         },
         {
             headers: {
@@ -63,7 +65,8 @@ function SignUpForm() {
                 confirm_password: "",
                 user_type: "",
                 department: "",
-                roll_number: ""
+                roll_number: "",
+                year: ""
             });
             setNotify({
                 open: true,
@@ -110,6 +113,7 @@ function SignUpForm() {
           value={state.name}
           onChange={handleChange}
           placeholder="Name"
+          required
         />
         <input
           type="email"
@@ -117,6 +121,7 @@ function SignUpForm() {
           value={state.email}
           onChange={handleChange}
           placeholder="Email"
+          required
         />
         <input
           type="password"
@@ -124,6 +129,7 @@ function SignUpForm() {
           value={state.password}
           onChange={handleChange}
           placeholder="Password"
+          required
         />
         <input
           type="password"
@@ -131,13 +137,14 @@ function SignUpForm() {
           value={state.confirm_password}
           onChange={handleChange}
           placeholder="Confirm Password"
+          required
         />
         <select
           name="user_type"
           value={state.user_type}
           onChange={handleChange}
         >
-          <option value="">None</option>
+          <option value="">User Type</option>
           <option value="student">Student</option>
           <option value="supervisor">Supervisor</option>
           <option value="faculty_advisor">Faculty Advisor</option>
@@ -147,23 +154,39 @@ function SignUpForm() {
           value={state.department}
           onChange={handleChange}
         >
-          <option value="">None</option>
+          <option value="">Department</option>
           <option value="CSE">CSE</option>
           <option value="ME">ME</option>
           <option value="CH">CH</option>
+          <option value="ES">ES</option>
           <option value="BB">BB</option>
           <option value="EE">EE</option>
           <option value="CI">CI</option>
         </select>
+
+        {/* roll_number */}
         <input
           type="text"
           name="roll_number"
           value={state.roll_number}
           onChange={handleChange}
           placeholder="Roll Number"
-          style = {{display: state.user_type === "student" ? "block" : "none"}}
-          required={state.user_type === "student" ? true : false}
+          style={{ display: state.user_type === "student" ? "block" : "none" }}
+          required={state.user_type === "student"}
         />
+        <select
+          name="year"
+          value={state.year}
+          onChange={handleChange}
+          style={{ display: state.user_type === "supervisor" || state.user_type === "" ? "none" : "block" }}
+        >
+          <option value="0">Year</option>
+          <option value={new Date().getFullYear()}> {new Date().getFullYear()}</option>
+          <option value={new Date().getFullYear() - 1}> {new Date().getFullYear() - 1}</option>
+          <option value={new Date().getFullYear() - 2}> {new Date().getFullYear() - 2}</option>
+          <option value={new Date().getFullYear() - 3}> {new Date().getFullYear() - 3}</option>
+        </select>
+
         <button>Sign Up</button>
       </form>
     </div>

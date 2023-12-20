@@ -7,9 +7,9 @@ import { categories } from '../utils/constants';
 const SideBar = ({ selectedCategory, setSelectedCategory, userType }) => {
   const visibleCategories = categories.filter(category => {
     if (userType === 'student') {
-      return ['Home', 'Form'].includes(category.name);
+      return ['Home', 'Form', 'Projects'].includes(category.name);
     } else if (userType === 'supervisor') {
-      return ['Home', 'Projects for Approval'].includes(category.name);
+      return ['Home', 'Projects for Approval', 'Projects'].includes(category.name);
     }
     else if (userType === 'faculty_advisor'){
         return ['Home', 'Search', 'Projects for Grade'].includes(category.name);
@@ -18,14 +18,7 @@ const SideBar = ({ selectedCategory, setSelectedCategory, userType }) => {
   });
 
   return (
-    <Stack
-      direction='row'
-      sx={{
-        overflowY: 'auto',
-        height: { sx: 'auto', md: '95%' },
-        flexDirection: { md: 'column' },
-      }}
-    >
+    <Stack>
       {visibleCategories.map(category => (
         <button
           className="category-btn"

@@ -29,7 +29,7 @@ export default function Signinon() {
     document.body.style.flexDirection = "column";
     document.body.style.fontFamily = "Montserrat";
     document.body.style.height = "100vh";
-    document.body.style.margin = "-20px 0 50px";
+    document.body.style.margin = "-10px 0 50px";
     import("../components/sign_in_on/signin.css");
     return () => {
       document.body.style.backgroundColor = null;

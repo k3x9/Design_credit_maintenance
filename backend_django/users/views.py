@@ -3,18 +3,15 @@ from django.http import HttpResponse,JsonResponse
 from .models import User,Cookie,Student,Supervisor,FacultyAdvisor,Form
 from django.views.decorators.csrf import csrf_protect,ensure_csrf_cookie,csrf_exempt
 from django.middleware.csrf import get_token
+from django.contrib.auth.hashers import make_password, check_password
 import json
-
-@ensure_csrf_cookie
-def get_csrf_token(request):
-    return JsonResponse({'csrfToken': get_token(request)})
 
 @csrf_exempt
 def signup(request):
     data=json.loads(request.body.decode('utf-8'))
     print(data)
-    name = data.get('name')
-    email = data.get('email')
+    name = data.get('name').strip()
+    email = data.get('email').strip()
     password = data.get('password')
     confirm_password = data.get('confirm_password')
     user_type = data.get('user_type')
@@ -26,6 +23,11 @@ def signup(request):
     if password != confirm_password:
         return JsonResponse({'status': 400, 'message': 'Passwords do not match'})
     
+    if not department:
+        return JsonResponse({'status': 400, 'message': 'Department is required'})
+    
+    if not user_type:
+        return JsonResponse({'status': 400, 'message': 'User type is required'})
     print("HEre")
     # check email in db
     user = User.objects.filter(email=email).first()
@@ -34,27 +36,42 @@ def signup(request):
         return JsonResponse({'status': 400, 'message': 'Email already exists'})
     
     print("hr")
-    # create user
-    user = User(email=email, password=password, user_type=user_type, department=department)
+    print(make_password(password))
+    user = User(email=email, password=make_password(password), user_type=user_type, department=department)
+    # user = User(email=email, password=password, user_type=user_type, department=department)
     print("yes")
-    user.save()
 
     print("hr")
-    if user_type == 'student':
-        check_roll = Student.objects.filter(roll_number=data.get('roll_number')).first()
-        if check_roll and check_roll.user.department == department:
-            user.delete()
-            return JsonResponse({'status': 400, 'message': 'Invalid roll number'})
-        
-        student = Student(user=user, name=name, roll_number=data.get('roll_number'))
-        student.save()
-    elif user_type == 'supervisor':
-        supervisor = Supervisor(user=user, name=name)
-        supervisor.save()
-    elif user_type == 'faculty_advisor':
-        facultyadvisor = FacultyAdvisor(user=user, name=name)
-        facultyadvisor.save()
-
+    try:
+        if user_type == 'student':
+            check_roll = Student.objects.filter(roll_number=data.get('roll_number')).first()
+            if check_roll:
+                return JsonResponse({'status': 400, 'message': 'Invalid roll number'})
+            
+            year = int(data.get('year').strip())
+            if not year:
+                return JsonResponse({'status': 400, 'message': 'Year is required'})
+            
+            user.save()
+            student = Student(user=user, name=name, roll_number=data.get('roll_number').strip().upper(), year=year)
+            student.save()
+        elif user_type == 'supervisor':
+            user.save()
+            supervisor = Supervisor(user=user, name=name)
+            supervisor.save()
+        elif user_type == 'faculty_advisor':
+            year = int(data.get('year').strip())
+            if not year:
+                return JsonResponse({'status': 400, 'message': 'Year is required'})
+            fa = FacultyAdvisor.objects.filter(user__department=department, year=year).first()
+            if fa:
+                return JsonResponse({'status': 400, 'message': 'Faculty advisor already exists for the year'})
+            user.save()
+            facultyadvisor = FacultyAdvisor(user=user, name=name, year=year)
+            facultyadvisor.save()
+    except Exception as e:
+        print("error:", e)
+        return JsonResponse({'status': 400, 'message': 'Invalid Year or Data'})
     # success & redirect to home page
     return JsonResponse({'status': 201, 'message': 'Signup successful'})
 
@@ -73,9 +90,14 @@ def login(request):
             if not user:
                 return JsonResponse({'status': 400, 'message': 'Email does not exist or Incorrect password'})
 
-            if user.password != password:
+            if check_password(password, user.password) == False:
                 return JsonResponse({'status': 400, 'message': 'Incorrect password'})
 
+            # if user.password != password:
+            #     return JsonResponse({'status': 400, 'message': 'Incorrect password'})
+            cookie = Cookie.objects.filter(email=email).first()
+            if cookie:
+                cookie.delete()
             cookie = Cookie.create(email)
 
             return JsonResponse({'status': 200, 'message': 'Login successful', 'cookie': cookie, 'user_type': user.user_type})
@@ -244,8 +266,9 @@ def get_forms_super(request):
         user = User.objects.filter(email=email).first()
         fa = FacultyAdvisor.objects.filter(user=user).first()
         dept = fa.user.department
+        year = fa.year
 
-        forms = Form.objects.filter(student__user__department=dept, supervisor_approval=True, completed=False)
+        forms = Form.objects.filter(student__user__department=dept, supervisor_approval=True, completed=False, student__year=year)
         forms_list = []
 
         for form in forms:
@@ -360,8 +383,19 @@ def get_forms_by_roll_number(request):
         if not val:
             return JsonResponse({'status': 400, 'message': 'Invalid cookie'})
         
-        roll_number = data.get('roll_number')
+        email = Cookie.objects.filter(cookie=cookie).first().email
+        user = User.objects.filter(email=email).first()
+        fa = FacultyAdvisor.objects.filter(user=user).first()
+        if not fa:
+            return JsonResponse({'status': 400, 'message': 'Invalid faculty advisor'})
+        dept = fa.user.department
+        year = fa.year
+        roll_number = data.get('roll_number').upper()
         student = Student.objects.filter(roll_number=roll_number).first()
+        if student.year != year:
+            return JsonResponse({'status': 400, 'message': 'Invalid roll number'})
+        if student.user.department != dept:
+            return JsonResponse({'status': 400, 'message': 'Invalid roll number'})
         if not student:
             return JsonResponse({'status': 400, 'message': 'No student with this roll number'})
         
@@ -387,6 +421,140 @@ def get_forms_by_roll_number(request):
                 'completed': form.completed,
                 'grade': form.grade
             }
-            forms_list.append(form_dict)
+            if form.grade == 'NA':
+                forms_list.insert(0, form_dict)
+            else:
+                forms_list.append(form_dict)
 
+        return JsonResponse({'status': 200, 'message': 'Forms retrieved successfully', 'forms': forms_list})
+    
+@csrf_exempt
+def get_all(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        cookie = data.get('cookie')
+        val = Cookie.cookie_check(cookie)
+        if not val:
+            return JsonResponse({'status': 400, 'message': 'Invalid cookie'})
+        
+        email = Cookie.objects.filter(cookie=cookie).first().email
+        user = User.objects.filter(email=email).first()
+        fa = FacultyAdvisor.objects.filter(user=user).first()
+        if not fa:
+            return JsonResponse({'status': 400, 'message': 'Invalid faculty advisor'})
+        dept = fa.user.department
+        year = fa.year
+
+        forms = Form.objects.filter(student__user__department=dept, completed=False, student__year=year)
+        forms_list = []
+        for form in forms:
+            forms_dict = {
+                'Name': form.student.name,
+                'RollNumber': form.student.roll_number,
+                'CourseNumber': form.course_code,
+                'Category': form.category,
+                'CreditsCompleted': form.student.design_credits_completed,
+                'CourseCodeCompleted': form.student.completed_course_code,
+                'Category1': form.student.category1,
+                'Category2': form.student.category2,
+                'Category3': form.student.category3,
+                'Category4': form.student.category4,
+                'Category5': form.student.category5,
+                'Category6': form.student.category6
+            }
+            forms_list.append(forms_dict)
+
+        return JsonResponse({'status': 200, 'message': 'Forms retrieved successfully', 'forms': forms_list})
+
+@csrf_exempt
+def student_projects(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        cookie = data.get('cookie')
+        val = Cookie.cookie_check(cookie)
+        if not val:
+            return JsonResponse({'status': 400, 'message': 'Invalid cookie'})
+
+        email = Cookie.objects.filter(cookie=cookie).first().email
+        user = User.objects.filter(email=email).first()
+        student = Student.objects.filter(user=user).first()
+        if not student:
+            return JsonResponse({'status': 400, 'message': 'Invalid student'})
+        
+        forms = Form.objects.filter(student=student)
+        forms_list = []
+
+        for form in forms:
+            if form.grade == 'X':
+                form_dict = {
+                    'title': form.title,
+                    'supervisor': form.supervisor.name,
+                    'status': 'X'
+                }
+                forms_list.insert(0, form_dict)
+            elif form.completed == True:
+                form_dict = {
+                    'title': form.title,
+                    'supervisor': form.supervisor.name,
+                    'status': 'Completed'
+                }
+                forms_list.append(form_dict)
+            elif form.supervisor_approval == True:
+                form_dict = {
+                    'title': form.title,
+                    'supervisor': form.supervisor.name,
+                    'status': 'Supervisor approved'
+                }
+                forms_list.insert(0, form_dict)
+            else:
+                form_dict = {
+                    'title': form.title,
+                    'supervisor': form.supervisor.name,
+                    'status': 'Waiting for supervisor approval'
+                }
+                forms_list.insert(0, form_dict)
+
+        return JsonResponse({'status': 200, 'message': 'Forms retrieved successfully', 'forms': forms_list})
+
+@csrf_exempt
+def supervisor_projects(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        cookie = data.get('cookie')
+        val = Cookie.cookie_check(cookie)
+        if not val:
+            return JsonResponse({'status': 400, 'message': 'Invalid cookie'})
+        
+        email = Cookie.objects.filter(cookie=cookie).first().email
+        user = User.objects.filter(email=email).first()
+        supervisor = Supervisor.objects.filter(user=user).first()
+        if not supervisor:
+            return JsonResponse({'status': 400, 'message': 'Invalid supervisor'})
+        
+        forms = Form.objects.filter(supervisor=supervisor)
+        forms_list = []
+
+        for form in forms:
+            if form.completed == True:
+                form_dict = {
+                    'title': form.title,
+                    'student': form.student.name,
+                    'status': 'Completed'
+                }
+                forms_list.append(form_dict)
+            elif form.supervisor_approval == True:
+                form_dict = {
+                    'title': form.title,
+                    'student': form.student.name,
+                    'status': 'Pending grade'
+                }
+                forms_list.insert(0, form_dict)
+            else:
+                form_dict = {
+                    'title': form.title,
+                    'student': form.student.name,
+                    'status': 'Waiting for approval'
+                }
+                forms_list.insert(0, form_dict)
+            
         return JsonResponse({'status': 200, 'message': 'Forms retrieved successfully', 'forms': forms_list})

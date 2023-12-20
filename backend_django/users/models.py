@@ -36,8 +36,8 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class User(models.Model):
-    email = models.CharField(max_length=50)
-    password = models.CharField(max_length=20)
+    email = models.CharField(max_length=50, primary_key=True)
+    password = models.CharField()
     department = models.CharField(max_length=30)
     user_type = models.CharField(max_length=20)
     groups = models.ManyToManyField(Group, related_name='custom_user_groups')
@@ -56,6 +56,7 @@ class Student(models.Model):
     category4 = models.IntegerField(default=0)
     category5 = models.IntegerField(default=0)
     category6 = models.IntegerField(default=0)
+    year = models.IntegerField(default=datetime.now().year)
 
 class Supervisor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -64,6 +65,7 @@ class Supervisor(models.Model):
 class FacultyAdvisor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     name = models.CharField(max_length=30)
+    year = models.IntegerField(default=datetime.now().year)
 
 class Form(models.Model):
     FormID = models.AutoField(primary_key=True)

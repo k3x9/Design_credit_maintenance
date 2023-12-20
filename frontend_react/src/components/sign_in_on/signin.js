@@ -29,7 +29,7 @@ function SignInForm() {
     const { email, password } = state;
     // post request at /login with email and password
 
-    axios.post("http://localhost:8000/login/",
+    axios.post("login/",
       {
         "email": email,
         "password": password
@@ -55,6 +55,7 @@ function SignInForm() {
             },
           });
           // redirect to home page
+          console.log(res.data.cookie)
           localStorage.setItem('imp_cookie', res.data.cookie);
           localStorage.setItem('user_type', res.data.user_type);
           window.location.href = "/home";

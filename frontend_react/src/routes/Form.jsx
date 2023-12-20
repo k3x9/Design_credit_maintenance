@@ -6,17 +6,19 @@ import { alignProperty } from '@mui/material/styles/cssUtils';
 // const cookie = localStorage.getItem('imp_cookie');
 
 const Form = () => {
+  const cookie = localStorage.getItem('imp_cookie');
     const [formData, setFormData] = useState({
         student_cookie: '',
         supervisorEmail: '',
-        semester: 0,
+        semester: '',
         courseCode: '',
-        category: 0,
+        category: '',
         title: '',
         description: '',
         supervisorOutside: false,
         supervisorApproval: false,
-        completed: false
+        completed: false,
+        student_cookie: cookie
     });
     
     const [notify, setNotify] = React.useState({
@@ -38,13 +40,8 @@ const Form = () => {
     };
 
     const handleSubmit = async (e) => {
-        const cookie = localStorage.getItem('imp_cookie');
         e.preventDefault();
         console.log("cookie: ", cookie);
-        setFormData({
-            ...formData,
-            student_cookie: cookie
-        });
         console.log("formData: ", formData);
         for (const key in formData) {
             if (formData[key] === '') {
@@ -62,7 +59,7 @@ const Form = () => {
           }
         console.log("form:",formData);
         try {
-            axios.post('http://localhost:8000/form_submission/', formData)
+            axios.post('form_submission/', formData)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -81,9 +78,9 @@ const Form = () => {
                       setFormData({
                         student_cookie: '',
                         supervisorEmail: '',
-                        semester: 0,
+                        semester: '',
                         courseCode: '',
-                        category: 0,
+                        category: '',
                         title: '',
                         description: '',
                         supervisorOutside: false,
@@ -146,11 +143,33 @@ const Form = () => {
         
             {/* <input type="text" name="courseCode" placeholder="Course Code:" value={formData.courseCode} onChange={handleChange} required /> */}
             <select name="courseCode" value={formData.courseCode} onChange={handleChange} style={{ width: '100%', textAlign: 'left' }}>
-                <option value="">Select Course Code</option>
-                <option value="CSN1020">CSN1020</option>
-                <option value="CSN2020">CSN2020</option>
-                <option value="CSN3020">CSN3020</option>
-            </select>
+              <option value="">Select Course Code</option>
+              <option value="CSN1020">CSN1020</option>
+              <option value="CSN2020">CSN2020</option>
+              <option value="CSN3020">CSN3020</option>
+              <option value="EEN1010">EEN1010</option>
+              <option value="EEN2020">EEN2020</option>
+              <option value="EEN3010">EEN3010</option>
+              <option value="CIN1010">CIN1010</option>
+              <option value="CIN2010">CIN2010</option>
+              <option value="CIN3010">CIN3010</option>
+              <option value="MEN1010">MEN1010</option>
+              <option value="MEN2010">MEN2010</option>
+              <option value="MEN3010">MEN3010</option>
+              <option value="MTN1010">MTN1010</option>
+              <option value="MTN2010">MTN2010</option>
+              <option value="MTN3010">MTN3010</option>
+              <option value="BBN1010">BBN1010</option>
+              <option value="BBN2010">BBN2010</option>
+              <option value="BBN3010">BBN3010</option>
+              <option value="CHN1010">CHN1010</option>
+              <option value="CHN2010">CHN2010</option>
+              <option value="CHN3010">CHN3010</option>
+              <option value="ESN1010">ESN1010</option>
+              <option value="ESN2010">ESN2010</option>
+              <option value="ESN3010">ESN3010</option>
+          </select>
+
 
             {/* <label>Category:</label> */}
             <select name="category" value={formData.category} onChange={handleChange} style={{ width: '100%', textAlign: 'left' }}>

@@ -16,7 +16,7 @@ const ProjectsForApproval = () => {
 
   const fetchPendingForms = async () => {
     try{
-        axios.post('http://localhost:8000/get_forms_super/', {cookie: cookie})
+        axios.post('get_forms_super/', {cookie: cookie})
         .then(res => {
             console.log(res);
             console.log(res.data);
@@ -35,7 +35,7 @@ const ProjectsForApproval = () => {
   }, []);
 
   const handleGrade = async (formId,grade) => {
-    axios.post('http://localhost:8000/grade_given/', {form_id: formId, cookie: cookie, grade: grade})
+    axios.post('grade_given/', {form_id: formId, cookie: cookie, grade: grade})
     .then(res => {
       console.log(res);
       console.log(res.data);
@@ -77,7 +77,7 @@ const ProjectsForApproval = () => {
 
 
 //   const handleApprove = async (formId) => {
-//     axios.post('http://localhost:8000/approve_form_super/', {form_id: formId, cookie: cookie})
+//     axios.post('approve_form_super/', {form_id: formId, cookie: cookie})
 //     .then(res => {
 //         console.log(res);
 //         console.log(res.data);

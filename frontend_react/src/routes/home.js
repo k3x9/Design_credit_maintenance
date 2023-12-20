@@ -8,6 +8,8 @@ import ProjectsForApproval from './Projects For Approval';
 import SuperProjectsForGrade from './Super Project Grade';
 import SearchForms from './SearchForms';
 import axios from 'axios';
+import Projects from './Projects';
+import CurrentProjects from './CurrentProjects';
 
 const Home = () => {
 
@@ -20,7 +22,7 @@ const Home = () => {
         const storedUserType = localStorage.getItem('user_type');
         const storedCookie = localStorage.getItem('imp_cookie');
         console.log(storedCookie);
-        const response = await axios.post('http://localhost:8000/check_cookie/', { cookie: storedCookie });
+        const response = await axios.post('check_cookie/', { cookie: storedCookie });
 
         if (response.data.status === 400) {
           window.location.href = '/login';
@@ -51,7 +53,7 @@ const Home = () => {
       <Box
         sx={{
           height: { sx: 'auto', md: '100vh' },
-          borderRight: '3px solid #3d3d3d',
+          borderRight: '1.5px solid #3d3d3d',
           px: { sx: 0, md: 2 },
         }}
       >
@@ -62,38 +64,40 @@ const Home = () => {
         />
       </Box>
       <Box
-      //align left
         sx={{
           flex: 1,
           display: 'flex',
-          justifyContent: 'center',
+          justifyContent: selectedCategory === 'Home' ? 'center' : 'flex-start',
           alignItems: 'center',
-          
+          flexDirection: 'column', // Center content vertically
         }}
       >
-
         {selectedCategory === 'Home' ? (
           <input
-          type="text"
-          value="Hii"
-          style={{
-            padding: '10px',
-            fontSize: '16px',
-            width: '200px',
-          }}
-        />
-        ): selectedCategory === 'Form' ? (
+            type="text"
+            value="Hii"
+            style={{
+              padding: '10px',
+              fontSize: '16px',
+              width: '200px',
+            }}
+          />
+        ) : selectedCategory === 'Form' ? (
           <Form />
-        ): selectedCategory === 'Projects for Approval' && userType === 'supervisor' ? (
-          <ProjectsForApproval />  
-        ): selectedCategory === 'Projects for Grade' && userType === 'faculty_advisor' ? (
-          <SuperProjectsForGrade />  
-        ): selectedCategory === 'Search' ? (
+        ) : selectedCategory === 'Projects for Approval' && userType === 'supervisor' ? (
+          <ProjectsForApproval />
+        ) : selectedCategory === 'Projects for Grade' && userType === 'faculty_advisor' ? (
+          <SuperProjectsForGrade />
+        ) : selectedCategory === 'Search' ? (
           <SearchForms />
-        ): null
+        ) : selectedCategory === 'Projects' && userType === 'student' ? (
+          <Projects />
+        ) : selectedCategory === 'Projects' && userType === 'supervisor' ? (
+          <CurrentProjects />
+        ) : null
         }
-
       </Box>
+
     </Box>
   );
 };
