@@ -493,6 +493,7 @@ def student_projects(request):
                     'title': form.title,
                     'supervisor': form.supervisor.name,
                     'courseCode': form.course_code,
+                    'category': form.category,
                     'status': 'X'
                 }
                 forms_list.insert(0, form_dict)
@@ -501,6 +502,7 @@ def student_projects(request):
                     'title': form.title,
                     'supervisor': form.supervisor.name,
                     'courseCode': form.course_code,
+                    'category': form.category,
                     'status': 'Completed'
                 }
                 forms_list.append(form_dict)
@@ -509,6 +511,7 @@ def student_projects(request):
                     'title': form.title,
                     'supervisor': form.supervisor.name,
                     'courseCode': form.course_code,
+                    'category': form.category,
                     'status': 'Supervisor approved'
                 }
                 forms_list.insert(0, form_dict)
@@ -517,6 +520,7 @@ def student_projects(request):
                     'title': form.title,
                     'supervisor': form.supervisor.name,
                     'courseCode': form.course_code,
+                    'category': form.category,
                     'status': 'Waiting for supervisor approval'
                 }
                 forms_list.insert(0, form_dict)

@@ -29,6 +29,7 @@ const Projects = () => {
             <th style={{ border: '1px solid #ddd', padding: '12px' }}>Project Title</th>
             <th style={{ border: '1px solid #ddd', padding: '12px' }}>Supervisor</th>
             <th style={{ border: '1px solid #ddd', padding: '12px' }}>Course Code</th>
+            <th style={{ border: '1px solid #ddd', padding: '12px' }}>Category</th>
             <th style={{ border: '1px solid #ddd', padding: '12px' }}>Status</th>
           </tr>
         </thead>
@@ -39,6 +40,7 @@ const Projects = () => {
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{project.title}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{project.supervisor}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{project.courseCode}</td>
+                <td style={{ border: '1px solid #ddd', padding: '12px' }}>{project.category}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{project.status}</td>
             </tr>
           ))}
