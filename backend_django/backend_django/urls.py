@@ -27,8 +27,12 @@ urlpatterns = [
     path('approve_form/', views.approve_form, name='approve_form'),
     path('reject_form/', views.reject_form, name='reject_form'),
     path('get_forms_super/', views.get_forms_super, name='get_forms_super'),
-    path('get_csrf_token/', views.get_csrf_token, name='get_csrf_token'),
     path('check_cookie/', views.check_cookie, name='check_cookie'),
     path('grade_given/', views.grade_given, name='grade_given'),
     path('get_forms_by_roll_number/', views.get_forms_by_roll_number, name='get_forms_by_roll_number'),
+    path('get_all/', views.get_all, name='get_all'),
+    path('student_projects/', views.student_projects, name='student_projects'),
+    path('supervisor_projects/', views.supervisor_projects, name='supervisor_projects'),
+    path('get_forms_by_course_code/', views.get_forms_by_course_code, name='get_forms_by_course_code'),
+    path('get_user_department/', views.get_user_department, name='get_user_department'),
 ]
