@@ -35,7 +35,7 @@ function SignUpForm() {
     evt.preventDefault();
 
     const { name, email, password,confirm_password, user_type, department, roll_number, year} = state;
-    axios.post("signup/",
+    axios.post("http://localhost:8000/signup/",
         {
             name: name,
             email: email,

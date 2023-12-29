@@ -12,7 +12,7 @@ const SideBar = ({ selectedCategory, setSelectedCategory, userType }) => {
       return ['Home', 'Projects for Approval', 'Projects'].includes(category.name);
     }
     else if (userType === 'faculty_advisor'){
-        return ['Home', 'Search', 'Projects for Grade'].includes(category.name);
+        return ['Home', 'Search', 'Search by Course Code', 'Projects for Grade'].includes(category.name);
     }
     return false;
   });

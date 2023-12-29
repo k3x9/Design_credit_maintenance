@@ -29,7 +29,7 @@ function SignInForm() {
     const { email, password } = state;
     // post request at /login with email and password
 
-    axios.post("login/",
+    axios.post("http://localhost:8000/login/",
       {
         "email": email,
         "password": password

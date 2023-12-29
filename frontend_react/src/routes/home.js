@@ -10,6 +10,7 @@ import SearchForms from './SearchForms';
 import axios from 'axios';
 import Projects from './Projects';
 import CurrentProjects from './CurrentProjects';
+import SearchByCourseCode from './SearchByCourseCode';
 
 const Home = () => {
 
@@ -22,7 +23,7 @@ const Home = () => {
         const storedUserType = localStorage.getItem('user_type');
         const storedCookie = localStorage.getItem('imp_cookie');
         console.log(storedCookie);
-        const response = await axios.post('check_cookie/', { cookie: storedCookie });
+        const response = await axios.post('http://localhost:8000/check_cookie/', { cookie: storedCookie });
 
         if (response.data.status === 400) {
           window.location.href = '/login';
@@ -69,7 +70,7 @@ const Home = () => {
           display: 'flex',
           justifyContent: selectedCategory === 'Home' ? 'center' : 'flex-start',
           alignItems: 'center',
-          flexDirection: 'column', // Center content vertically
+          flexDirection: 'column',
         }}
       >
         {selectedCategory === 'Home' ? (
@@ -86,6 +87,8 @@ const Home = () => {
           <Form />
         ) : selectedCategory === 'Projects for Approval' && userType === 'supervisor' ? (
           <ProjectsForApproval />
+        ) : selectedCategory === 'Search by Course Code' && userType === 'faculty_advisor'? (
+          <SearchByCourseCode />
         ) : selectedCategory === 'Projects for Grade' && userType === 'faculty_advisor' ? (
           <SuperProjectsForGrade />
         ) : selectedCategory === 'Search' ? (

@@ -149,7 +149,10 @@ def form_submission(request):
             return JsonResponse({'status': 400, 'message': 'Design credits completed'})
         
         # checking category criteria
-        print("student: ",student.category3)
+        try:
+            category = int(category)
+        except:
+            return JsonResponse({'status': 400, 'message': 'Invalid category'})
         if category == 1 and student.category1 + 2 > 4:
             return JsonResponse({'status': 400, 'message': f'4 credits compeleted in category 1'})
         if category == 2 and student.category2 + 2 > 4:
@@ -203,7 +206,7 @@ def get_forms(request):
         
         forms = Form.objects.filter(supervisor=supervisor, supervisor_approval=False)
         forms_list = []
-
+        
         for form in forms:
             student = form.student
             student_user = student.user
@@ -399,7 +402,7 @@ def get_forms_by_roll_number(request):
         if not student:
             return JsonResponse({'status': 400, 'message': 'No student with this roll number'})
         
-        forms = Form.objects.filter(student=student)
+        forms = Form.objects.filter(student=student, supervisor_approval=True)
         forms_list = []
 
         for form in forms:
@@ -445,7 +448,7 @@ def get_all(request):
         dept = fa.user.department
         year = fa.year
 
-        forms = Form.objects.filter(student__user__department=dept, completed=False, student__year=year)
+        forms = Form.objects.filter(student__user__department=dept, completed=False, student__year=year, supervisor_approval=True)
         forms_list = []
         for form in forms:
             forms_dict = {
@@ -489,6 +492,7 @@ def student_projects(request):
                 form_dict = {
                     'title': form.title,
                     'supervisor': form.supervisor.name,
+                    'courseCode': form.course_code,
                     'status': 'X'
                 }
                 forms_list.insert(0, form_dict)
@@ -496,6 +500,7 @@ def student_projects(request):
                 form_dict = {
                     'title': form.title,
                     'supervisor': form.supervisor.name,
+                    'courseCode': form.course_code,
                     'status': 'Completed'
                 }
                 forms_list.append(form_dict)
@@ -503,6 +508,7 @@ def student_projects(request):
                 form_dict = {
                     'title': form.title,
                     'supervisor': form.supervisor.name,
+                    'courseCode': form.course_code,
                     'status': 'Supervisor approved'
                 }
                 forms_list.insert(0, form_dict)
@@ -510,6 +516,7 @@ def student_projects(request):
                 form_dict = {
                     'title': form.title,
                     'supervisor': form.supervisor.name,
+                    'courseCode': form.course_code,
                     'status': 'Waiting for supervisor approval'
                 }
                 forms_list.insert(0, form_dict)
@@ -534,6 +541,7 @@ def supervisor_projects(request):
         forms = Form.objects.filter(supervisor=supervisor)
         forms_list = []
 
+        i,j=0,0
         for form in forms:
             if form.completed == True:
                 form_dict = {
@@ -541,14 +549,14 @@ def supervisor_projects(request):
                     'student': form.student.name,
                     'status': 'Completed'
                 }
-                forms_list.append(form_dict)
+                forms_list.insert(j, form_dict)
             elif form.supervisor_approval == True:
                 form_dict = {
                     'title': form.title,
                     'student': form.student.name,
-                    'status': 'Pending grade'
+                    'status': 'Pending Project'
                 }
-                forms_list.insert(0, form_dict)
+                forms_list.insert(i, form_dict)
             else:
                 form_dict = {
                     'title': form.title,
@@ -556,5 +564,119 @@ def supervisor_projects(request):
                     'status': 'Waiting for approval'
                 }
                 forms_list.insert(0, form_dict)
+                i+=1
+            j+=1
             
         return JsonResponse({'status': 200, 'message': 'Forms retrieved successfully', 'forms': forms_list})
+
+@csrf_exempt
+def get_forms_by_semester(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        cookie = data.get('cookie')
+        val = Cookie.cookie_check(cookie)
+        if not val:
+            return JsonResponse({'status': 400, 'message': 'Invalid cookie'})
+        
+        email = Cookie.objects.filter(cookie=cookie).first().email
+        user = User.objects.filter(email=email).first()
+        fa = FacultyAdvisor.objects.filter(user=user).first()
+        if not fa:
+            return JsonResponse({'status': 400, 'message': 'Invalid faculty advisor'})
+        dept = fa.user.department
+        year = fa.year
+        try:
+            semester = float(data.get('semester'))
+        except:
+            return JsonResponse({'status': 400, 'message': 'Invalid semester'})
+        
+        forms = Form.objects.filter(student__user__department=dept, student__year=year, semester=semester, supervisor_approval=True, completed=False)
+        
+        forms = Form.objects.filter(student=student, supervisor_approval=True)
+        forms_list = []
+
+        for form in forms:
+            student = form.student
+            student_user = student.user
+            form_dict = {
+                'id': form.FormID,
+                'studentName': student.name,
+                'studentRollNumber': student.roll_number,
+                'studentEmail': student_user.email,
+                'supervisorName': form.supervisor.name,
+                'semester': form.semester,
+                'courseCode': form.course_code,
+                'category': form.category,
+                'title': form.title,
+                'description': form.description,
+                'supervisorOutside': form.supervisor_outside,
+                'supervisorApproval': form.supervisor_approval,
+                'completed': form.completed,
+                'grade': form.grade
+            }
+            forms_list.append(form_dict)
+
+        return JsonResponse({'status': 200, 'message': 'Forms retrieved successfully', 'forms': forms_list})
+
+@csrf_exempt
+def get_forms_by_course_code(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        cookie = data.get('cookie')
+        course_code = data.get('course_code')
+        val = Cookie.cookie_check(cookie)
+        if not val:
+            return JsonResponse({'status': 400, 'message': 'Invalid cookie'})
+        
+        email = Cookie.objects.filter(cookie=cookie).first().email
+        user = User.objects.filter(email=email).first()
+        fa = FacultyAdvisor.objects.filter(user=user).first()
+        if not fa:
+            return JsonResponse({'status': 400, 'message': 'Invalid faculty advisor'})
+        dept = fa.user.department
+        year = fa.year
+        
+        forms = Form.objects.filter(student__user__department=dept, student__year=year, course_code=course_code, supervisor_approval=True, completed=False)
+        forms_list = []
+
+        for form in forms:
+            student = form.student
+            student_user = student.user
+            form_dict = {
+                'id': form.FormID,
+                'studentName': student.name,
+                'studentRollNumber': student.roll_number,
+                'studentEmail': student_user.email,
+                'supervisorName': form.supervisor.name,
+                'semester': form.semester,
+                'courseCode': form.course_code,
+                'category': form.category,
+                'title': form.title,
+                'description': form.description,
+                'supervisorOutside': form.supervisor_outside,
+                'supervisorApproval': form.supervisor_approval,
+                'completed': form.completed,
+                'grade': form.grade
+            }
+            forms_list.append(form_dict)
+
+        return JsonResponse({'status': 200, 'message': 'Forms retrieved successfully', 'forms': forms_list})
+
+@csrf_exempt
+def get_user_department(request):
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        cookie = data.get('cookie')
+        course_code = data.get('course_code')
+        val = Cookie.cookie_check(cookie)
+        if not val:
+            return JsonResponse({'status': 400, 'message': 'Invalid cookie'})
+        
+        email = Cookie.objects.filter(cookie=cookie).first().email
+        user = User.objects.filter(email=email).first()
+        fa = FacultyAdvisor.objects.filter(user=user).first()
+        if not fa:
+            return JsonResponse({'status': 400, 'message': 'Invalid faculty advisor'})
+        dept = fa.user.department
+        
+        return JsonResponse({'status': 200, 'message': 'Department retrieved successfully', 'department': dept})

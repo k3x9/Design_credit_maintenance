@@ -8,7 +8,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.post('student_projects/', { cookie: cookie });
+        const response = await axios.post('http://localhost:8000/student_projects/', { cookie: cookie });
         console.log(response.data);
         setProjects(response.data.forms || []);
       } catch (error) {
@@ -28,6 +28,7 @@ const Projects = () => {
             <th style={{ border: '1px solid #ddd', padding: '12px' }}>Sr No.</th>
             <th style={{ border: '1px solid #ddd', padding: '12px' }}>Project Title</th>
             <th style={{ border: '1px solid #ddd', padding: '12px' }}>Supervisor</th>
+            <th style={{ border: '1px solid #ddd', padding: '12px' }}>Course Code</th>
             <th style={{ border: '1px solid #ddd', padding: '12px' }}>Status</th>
           </tr>
         </thead>
@@ -37,6 +38,7 @@ const Projects = () => {
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{index+1}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{project.title}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{project.supervisor}</td>
+                <td style={{ border: '1px solid #ddd', padding: '12px' }}>{project.courseCode}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{project.status}</td>
             </tr>
           ))}

@@ -38,6 +38,7 @@ export const categories = [
   { name: 'Projects for Approval'},
   { name: 'Projects for Grade'},
   { name: 'Projects'},
+  { name: 'Search by Course Code'},
 ];
 
 export const demoThumbnailUrl = 'https://i.ibb.co/G2L2Gwp/API-Course.png';

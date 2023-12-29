@@ -59,7 +59,7 @@ const Form = () => {
           }
         console.log("form:",formData);
         try {
-            axios.post('form_submission/', formData)
+            axios.post('http://localhost:8000/form_submission/', formData)
             .then(res => {
                 console.log(res);
                 console.log(res.data);
@@ -85,7 +85,8 @@ const Form = () => {
                         description: '',
                         supervisorOutside: false,
                         supervisorApproval: false,
-                        completed: false
+                        completed: false,
+                        student_cookie: cookie
                     });
                 }
                 else if(res.data.message === 'Invalid cookie'){

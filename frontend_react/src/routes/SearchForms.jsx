@@ -17,7 +17,7 @@ const SearchFormByRollNumber = () => {
 
   const fetchFormsByRollNumber = async () => {
     try {
-      axios.post('get_forms_by_roll_number/', { roll_number: rollNumber, cookie: cookie })
+      axios.post('http://localhost:8000/get_forms_by_roll_number/', { roll_number: rollNumber, cookie: cookie })
         .then(res => {
           console.log(res);
           console.log(res.data);
@@ -63,7 +63,7 @@ const SearchFormByRollNumber = () => {
   };
 
   const handleGrade = async (formId, grade) => {
-    axios.post('grade_given/', { form_id: formId, cookie: cookie, grade: grade })
+    axios.post('http://localhost:8000/grade_given/', { form_id: formId, cookie: cookie, grade: grade })
       .then(res => {
         console.log(res);
         console.log(res.data);
@@ -121,9 +121,9 @@ const SearchFormByRollNumber = () => {
             <tr>
               <th style={{ border: '1px solid #ddd', padding: '12px' }}>Sr No.</th>
               <th style={{ border: '1px solid #ddd', padding: '12px' }}>Project Title</th>
-              <th style={{ border: '1px solid #ddd', padding: '12px' }}>Description</th>
               <th style={{ border: '1px solid #ddd', padding: '12px' }}>Students</th>
               <th style={{ border: '1px solid #ddd', padding: '12px' }}>RollNumber</th>
+              <th style={{ border: '1px solid #ddd', padding: '12px' }}>Email</th>
               <th style={{ border: '1px solid #ddd', padding: '12px' }}>Supervisor</th>
               <th style={{ border: '1px solid #ddd', padding: '12px' }}>Category</th>
               <th style={{ border: '1px solid #ddd', padding: '12px' }}>Course Code</th>
@@ -137,9 +137,9 @@ const SearchFormByRollNumber = () => {
               <tr>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{index + 1}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{form.title}</td>
-                <td style={{ border: '1px solid #ddd', padding: '12px' }}>{form.description}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{form.studentName}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{form.studentRollNumber}</td>
+                <td style={{ border: '1px solid #ddd', padding: '12px' }}>{form.studentEmail}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{form.supervisorName}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{form.category}</td>
                 <td style={{ border: '1px solid #ddd', padding: '12px' }}>{form.courseCode}</td>
