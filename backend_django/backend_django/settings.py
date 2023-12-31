@@ -83,23 +83,6 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'users_db',
-    #     'HOST': 'localhost',
-    #     'Port': '5432',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'qwerty0110',
-    # }
-    # ,
-    # 'users_db': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'users_db',
-    #     'HOST': 'localhost',
-    #     'Port': '5432',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'DIUE438h#*HD',
-    # }
     'default': dj_database_url.config(
         default='postgresql://adarsh.shrivastava2003:dgNbOA7laU0v@ep-lucky-wood-97279899.us-east-2.aws.neon.tech/users_db?sslmode=require'
     ),
