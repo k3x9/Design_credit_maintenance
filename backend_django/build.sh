@@ -4,7 +4,7 @@
 echo "Building the project..."
 python3.9 -m pip install -r requirements1.txt
 
-echo "Make Migration..."
-python3.9 manage.py makemigrations --noinput
-python3.9 manage.py migrate --noinput
-python3.9 manage.py migrate --run-syncdb --noinput
+#checking if installed or not
+echo "Checking if installed or not..."
+python3.9 -m django --version
+python3.9 -m 
