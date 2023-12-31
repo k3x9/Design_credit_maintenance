@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
+import "./routes/home.css";
 import Signinon from "./routes/sign_in_on";
 import Home from "./routes/home";
 import ViewAllForms from "./routes/ViewAllForms";
