@@ -23,7 +23,7 @@ const Home = () => {
         const storedUserType = localStorage.getItem('user_type');
         const storedCookie = localStorage.getItem('imp_cookie');
         console.log(storedCookie);
-        const response = await axios.post('http://localhost:8000/check_cookie/', { cookie: storedCookie });
+        const response = await axios.post('https://design-credit-maintenance-backend.vercel.app/check_cookie/', { cookie: storedCookie });
 
         if (response.data.status === 400) {
           window.location.href = '/login';

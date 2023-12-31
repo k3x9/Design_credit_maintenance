@@ -35,7 +35,7 @@ function SignUpForm() {
     evt.preventDefault();
 
     const { name, email, password,confirm_password, user_type, department, roll_number, year} = state;
-    axios.post("http://localhost:8000/signup/",
+    axios.post("https://design-credit-maintenance-backend.vercel.app/signup/",
         {
             name: name,
             email: email,
