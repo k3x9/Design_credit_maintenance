@@ -17,7 +17,7 @@ const SearchFormByRollNumber = () => {
 
   const fetchFormsByRollNumber = async () => {
     try {
-      axios.post('http://localhost:8000/get_forms_by_roll_number/', { roll_number: rollNumber, cookie: cookie })
+      axios.post('https://dcm-backend.vercel.app/get_forms_by_roll_number/', { roll_number: rollNumber, cookie: cookie })
         .then(res => {
           console.log(res);
           console.log(res.data);
@@ -63,7 +63,7 @@ const SearchFormByRollNumber = () => {
   };
 
   const handleGrade = async (formId, grade) => {
-    axios.post('http://localhost:8000/grade_given/', { form_id: formId, cookie: cookie, grade: grade })
+    axios.post('https://dcm-backend.vercel.app/grade_given/', { form_id: formId, cookie: cookie, grade: grade })
       .then(res => {
         console.log(res);
         console.log(res.data);

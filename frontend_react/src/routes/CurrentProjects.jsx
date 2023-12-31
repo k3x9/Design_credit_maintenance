@@ -8,7 +8,7 @@ const Projects = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const response = await axios.post('http://localhost:8000/supervisor_projects/', { cookie: cookie });
+        const response = await axios.post('https://dcm-backend.vercel.app/supervisor_projects/', { cookie: cookie });
         console.log(response.data);
         setProjects(response.data.forms || []);
       } catch (error) {

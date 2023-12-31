@@ -59,7 +59,7 @@ const Form = () => {
           }
         console.log("form:",formData);
         try {
-            axios.post('http://localhost:8000/form_submission/', formData)
+            axios.post('https://dcm-backend.vercel.app/form_submission/', formData)
             .then(res => {
                 console.log(res);
                 console.log(res.data);

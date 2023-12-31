@@ -16,7 +16,7 @@ const ProjectsForApproval = () => {
 
   const fetchPendingForms = async () => {
     try {
-      axios.post('http://localhost:8000/get_forms_super/', { cookie: cookie })
+      axios.post('https://dcm-backend.vercel.app/get_forms_super/', { cookie: cookie })
         .then(res => {
           console.log(res);
           console.log(res.data);
@@ -34,7 +34,7 @@ const ProjectsForApproval = () => {
   }, []);
 
   const handleGrade = async (formId, grade) => {
-    axios.post('http://localhost:8000/grade_given/', { form_id: formId, cookie: cookie, grade: grade })
+    axios.post('https://dcm-backend.vercel.app/grade_given/', { form_id: formId, cookie: cookie, grade: grade })
       .then(res => {
         console.log(res);
         console.log(res.data);

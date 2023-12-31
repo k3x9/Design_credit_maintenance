@@ -10,7 +10,7 @@ const SearchFormByCourseCode = () => {
     const cookie = localStorage.getItem('imp_cookie');
     const getUserDepartment = async () => {
         try {
-            const res = await axios.post('http://localhost:8000/get_user_department/', { cookie: cookie });
+            const res = await axios.post('https://dcm-backend.vercel.app/get_user_department/', { cookie: cookie });
             console.log(res);
             console.log(res.data);
             setDept(res.data.department); // Set the department in state
@@ -30,7 +30,7 @@ const SearchFormByCourseCode = () => {
   
     const fetchFormsByCourseCode = async () => {
         try {
-            axios.post('http://localhost:8000/get_forms_by_course_code/', { course_code: courseCode, cookie: cookie })
+            axios.post('https://dcm-backend.vercel.app/get_forms_by_course_code/', { course_code: courseCode, cookie: cookie })
             .then(res => {
             console.log(res);
             console.log(res.data);
@@ -88,7 +88,7 @@ const SearchFormByCourseCode = () => {
     };
 
     const handleGrade = async (formId, grade) => {
-        axios.post('http://localhost:8000/grade_given/', { form_id: formId, cookie: cookie, grade: grade })
+        axios.post('https://dcm-backend.vercel.app/grade_given/', { form_id: formId, cookie: cookie, grade: grade })
         .then(res => {
             console.log(res);
             console.log(res.data);

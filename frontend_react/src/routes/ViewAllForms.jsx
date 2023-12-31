@@ -8,7 +8,7 @@ const DataTable = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post('http://localhost:8000/get_all/', { cookie });
+        const response = await axios.post('https://dcm-backend.vercel.app/get_all/', { cookie });
         console.log(response);
         setData(response.data.forms);
       } catch (error) {
