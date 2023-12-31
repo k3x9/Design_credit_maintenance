@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,14 +26,12 @@ SECRET_KEY = 'django-insecure-so#ors1%2&!ur3wzl@%ija9_djk3%eadqd$ut*)r@e(=*c#5@t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost","127.0.0.1"]
 CORS_ORIGIN_ALLOW_ALL = True
+ALLOWED_HOSTS = ["*"]
 
 
 # Allowed Cross Origin Requests
-CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000"
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
@@ -84,14 +83,14 @@ WSGI_APPLICATION = 'backend_django.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'users_db',
-        'HOST': 'localhost',
-        'Port': '5432',
-        'USER': 'postgres',
-        'PASSWORD': 'qwerty0110',
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #     'NAME': 'users_db',
+    #     'HOST': 'localhost',
+    #     'Port': '5432',
+    #     'USER': 'postgres',
+    #     'PASSWORD': 'qwerty0110',
+    # }
     # ,
     # 'users_db': {
     #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -101,6 +100,9 @@ DATABASES = {
     #     'USER': 'postgres',
     #     'PASSWORD': 'DIUE438h#*HD',
     # }
+    'default': dj_database_url.config(
+        default='postgresql://adarsh.shrivastava2003:dgNbOA7laU0v@ep-lucky-wood-97279899.us-east-2.aws.neon.tech/users_db?sslmode=require'
+    ),
 }
 
 
