@@ -4,6 +4,16 @@ import axios from 'axios';
 import Snackbar from "../components/snack_bar/toast";
 
 const SearchFormByCourseCode = () => {
+    const departmentCourseCodes = {
+      CSE: ['CSN1020', 'CSN2020', 'CSN3020'],
+      EE: ['EEN1010', 'EEN2020', 'EEN3010'],
+      ME: ['MEN1010', 'MEN2010', 'MEN3010'],
+      CI: ['CIN1010', 'CIN2010', 'CIN3010'],
+      CH: ['CHN1010', 'CHN2010', 'CHN3010'],
+      ES: ['ESN1010', 'ESN2010', 'ESN3010'],
+      BB: ['BBN1010', 'BBN2010', 'BBN3010'],
+      MT: ['MTN1010', 'MTN2010', 'MTN3010'],
+  };
   const [forms, setForms] = useState([]);
   const [dept, setDept] = useState('');
   const cookie = localStorage.getItem('imp_cookie');
@@ -50,18 +60,6 @@ const SearchFormByCourseCode = () => {
         } catch (error) {
         console.log(error);
         }
-    };
-
-
-    const departmentCourseCodes = {
-        CSE: ['CSN1020', 'CSN2020', 'CSN3020'],
-        EE: ['EEN1010', 'EEN2020', 'EEN3010'],
-        ME: ['MEN1010', 'MEN2010', 'MEN3010'],
-        CI: ['CIN1010', 'CIN2010', 'CIN3010'],
-        CH: ['CHN1010', 'CHN2010', 'CHN3010'],
-        ES: ['ESN1010', 'ESN2010', 'ESN3010'],
-        BB: ['BBN1010', 'BBN2010', 'BBN3010'],
-        MT: ['MTN1010', 'MTN2010', 'MTN3010'],
     };
 
     useEffect(() => {
