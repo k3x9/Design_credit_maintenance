@@ -70,6 +70,7 @@ const SearchFormByCourseCode = () => {
         };
     
         fetchData();
+        setCourseCode(departmentCourseCodes[dept][0]);
     }, []);
         
     const handleSearch = async () => {
@@ -129,6 +130,14 @@ const SearchFormByCourseCode = () => {
         )
     };
 
+    const handleViewAll = async () => {
+      try {
+        window.location.href = '/view-all-forms';
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    
     return (
         <div className='container-search'>
           <h2><u>Search Forms by Course Code</u></h2>
@@ -145,6 +154,7 @@ const SearchFormByCourseCode = () => {
                 ))}
               </select>
               <button onClick={handleSearch}>Search</button>
+              <button onClick={handleViewAll}>View All</button>
               {forms && forms.length > 0 && (
                 <table style={{ borderCollapse: 'collapse', width: '100%', fontSize: '1rem', border: '1px solid #ddd' }}>
                   <thead>

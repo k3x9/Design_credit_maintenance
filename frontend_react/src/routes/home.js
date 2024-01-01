@@ -85,13 +85,13 @@ const Home = () => {
           />
         ) : selectedCategory === 'Form' ? (
           <Form />
-        ) : selectedCategory === 'Projects for Approval' && userType === 'supervisor' ? (
-          <ProjectsForApproval />
         ) : selectedCategory === 'Search by Course Code' && userType === 'faculty_advisor'? (
           <SearchByCourseCode />
+        ) : selectedCategory === 'Projects for Approval' && userType === 'supervisor' ? (
+          <ProjectsForApproval />
         ) : selectedCategory === 'Projects for Grade' && userType === 'faculty_advisor' ? (
           <SuperProjectsForGrade />
-        ) : selectedCategory === 'Search' ? (
+        ) : selectedCategory === 'Search by Roll number' ? (
           <SearchForms />
         ) : selectedCategory === 'Projects' && userType === 'student' ? (
           <Projects />
