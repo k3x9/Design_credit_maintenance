@@ -4,6 +4,7 @@ import axios from 'axios';
 const DataTable = () => {
   const cookie = localStorage.getItem('imp_cookie');
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,6 +14,7 @@ const DataTable = () => {
         if(response.data.status === 400) {
           window.location.href = '/login';
         }
+        setLoading(false);
         setData(response.data.forms);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -22,6 +24,9 @@ const DataTable = () => {
     fetchData();
   }, [cookie]);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <h2>Data Table</h2>
