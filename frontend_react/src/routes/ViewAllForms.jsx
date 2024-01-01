@@ -4,44 +4,24 @@ import axios from 'axios';
 const DataTable = () => {
   const cookie = localStorage.getItem('imp_cookie');
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkCookies = async () => {
-      try {
-        const storedCookie = localStorage.getItem('imp_cookie');
-        const response = await axios.post('https://dcm-backend.vercel.app/check_cookie/', { cookie: storedCookie });
-
-        if (response.data.status === 400) {
-          window.location.href = '/login';
-        }
-
-      } catch (error) {
-        console.error('Error checking the cookie:', error);
-        window.location.href = '/login';
-      }
-      finally {
-        setLoading(false);
-      }
-    };
-
     const fetchData = async () => {
       try {
         const response = await axios.post('https://dcm-backend.vercel.app/get_all/', { cookie });
         console.log(response);
+        if(response.data.status === 400) {
+          window.location.href = '/login';
+        }
         setData(response.data.forms);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     };
 
-    checkCookies();
     fetchData();
   }, [cookie]);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
   return (
     <div>
       <h2>Data Table</h2>
