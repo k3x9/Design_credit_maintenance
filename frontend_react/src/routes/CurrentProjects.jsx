@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Snackbar from "../components/snack_bar/toast";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
   const cookie = localStorage.getItem('imp_cookie');
+  const [notify, setNotify] = React.useState({
+    open: false,
+    message: "",
+    severity: "success",
+    handleClose: () => {
+      setNotify((prev) => ({ ...prev, open: false }));
+    },
+  });
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -34,7 +43,6 @@ const Projects = () => {
               setNotify((prev) => ({ ...prev, open: false }));
             },
           });
-          fetchPendingForms();
         } else {
           setNotify({
             open: true,
@@ -74,7 +82,6 @@ const Projects = () => {
               setNotify((prev) => ({ ...prev, open: false }));
             },
           });
-          fetchPendingForms();
         } else {
           setNotify({
             open: true,
@@ -133,6 +140,7 @@ const Projects = () => {
           ))}
         </tbody>
       </table>
+      <Snackbar prop={notify} />
     </div>
   );
 };
