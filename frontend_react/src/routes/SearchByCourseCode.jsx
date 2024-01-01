@@ -15,7 +15,7 @@ const SearchFormByCourseCode = () => {
       MT: ['MTN1010', 'MTN2010', 'MTN3010'],
   };
   const [forms, setForms] = useState([]);
-  const [dept, setDept] = useState('');
+  const [dept, setDept] = useState('CSE');
   const cookie = localStorage.getItem('imp_cookie');
   const getUserDepartment = async () => {
     try {
