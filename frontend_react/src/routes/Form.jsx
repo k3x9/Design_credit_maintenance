@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Snackbar from "../components/snack_bar/toast";
-import { alignProperty } from '@mui/material/styles/cssUtils';
 
 // const cookie = localStorage.getItem('imp_cookie');
 

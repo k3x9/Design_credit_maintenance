@@ -4,7 +4,7 @@ import axios from 'axios';
 import Snackbar from "../components/snack_bar/toast";
 
 const SearchFormByCourseCode = () => {
-    const [courseCode, setCourseCode] = useState('');
+    const [courseCode, setCourseCode] = useState(departmentCourseCodes[dept][0] || '');
     const [forms, setForms] = useState([]);
     const [dept, setDept] = useState('');
     const cookie = localStorage.getItem('imp_cookie');
@@ -70,7 +70,6 @@ const SearchFormByCourseCode = () => {
         };
     
         fetchData();
-        setCourseCode(departmentCourseCodes[dept][0]);
     }, []);
         
     const handleSearch = async () => {
@@ -137,7 +136,7 @@ const SearchFormByCourseCode = () => {
         console.log(error);
       }
     };
-    
+
     return (
         <div className='container-search'>
           <h2><u>Search Forms by Course Code</u></h2>
