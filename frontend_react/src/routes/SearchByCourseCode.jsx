@@ -4,20 +4,20 @@ import axios from 'axios';
 import Snackbar from "../components/snack_bar/toast";
 
 const SearchFormByCourseCode = () => {
-    const [courseCode, setCourseCode] = useState(departmentCourseCodes[dept][0] || '');
-    const [forms, setForms] = useState([]);
-    const [dept, setDept] = useState('');
-    const cookie = localStorage.getItem('imp_cookie');
-    const getUserDepartment = async () => {
-        try {
-            const res = await axios.post('https://dcm-backend.vercel.app/get_user_department/', { cookie: cookie });
-            console.log(res);
-            console.log(res.data);
-            setDept(res.data.department); // Set the department in state
-        } catch (err) {
-            console.log(err);
-        }
+  const [forms, setForms] = useState([]);
+  const [dept, setDept] = useState('');
+  const cookie = localStorage.getItem('imp_cookie');
+  const getUserDepartment = async () => {
+    try {
+      const res = await axios.post('https://dcm-backend.vercel.app/get_user_department/', { cookie: cookie });
+      console.log(res);
+      console.log(res.data);
+      setDept(res.data.department); // Set the department in state
+    } catch (err) {
+      console.log(err);
     }
+  }
+  const [courseCode, setCourseCode] = useState(departmentCourseCodes[dept][0] || '');
     const [notify, setNotify] = React.useState({
         open: false,
         message: "",
