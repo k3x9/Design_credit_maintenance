@@ -14,19 +14,19 @@ const Projects = () => {
     },
   });
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const response = await axios.post('https://dcm-backend.vercel.app/supervisor_projects/', { cookie: cookie });
-        console.log(response.data);
-        setProjects(response.data.forms || []);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const fetchProjects = async () => {
+    try {
+      const response = await axios.post('https://dcm-backend.vercel.app/supervisor_projects/', { cookie: cookie });
+      console.log(response.data);
+      setProjects(response.data.forms || []);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
     fetchProjects();
-  }, [cookie]);
+  }, []);
 
   const handleReject = async (formId) => {
     axios.post('https://dcm-backend.vercel.app/reject_form/', { form_id: formId, cookie: cookie })
@@ -43,6 +43,7 @@ const Projects = () => {
               setNotify((prev) => ({ ...prev, open: false }));
             },
           });
+          fetchProjects();
         } else {
           setNotify({
             open: true,
@@ -82,6 +83,7 @@ const Projects = () => {
               setNotify((prev) => ({ ...prev, open: false }));
             },
           });
+          fetchProjects();
         } else {
           setNotify({
             open: true,
